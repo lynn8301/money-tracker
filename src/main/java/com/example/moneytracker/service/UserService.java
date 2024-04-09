@@ -1,6 +1,5 @@
 package com.example.moneytracker.service;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,12 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.moneytracker.model.User;
 import com.example.moneytracker.repository.UserRepository;
-import com.google.common.hash.Hashing;
+import com.example.moneytracker.utility.BasicUtility;
 
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    BasicUtility basicUtility;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -29,9 +30,7 @@ public class UserService {
     }
 
     public void addUsers(User newUser){
-        String password2Sha256 = Hashing.sha256()
-        .hashString(newUser.getPassword(), StandardCharsets.UTF_8)
-        .toString();
+        String password2Sha256 = basicUtility.str2Sha256(newUser.getPassword());
         newUser.setPassword(password2Sha256);
         userRepository.save(newUser);
     }
@@ -43,9 +42,7 @@ public class UserService {
         user.setName(userChange.getName());
         user.setEmail(userChange.getEmail());
 
-        String password2Sha256 = Hashing.sha256()
-        .hashString(userChange.getPassword(), StandardCharsets.UTF_8)
-        .toString();
+        String password2Sha256 = basicUtility.str2Sha256(userChange.getPassword());
         if(password2Sha256 != user.getPassword()) user.setPassword(password2Sha256);        
         
         userRepository.save(user);
