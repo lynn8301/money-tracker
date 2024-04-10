@@ -41,7 +41,7 @@ public class CategoryController {
         return result;
     }
 
-    @GetMapping("")
+    @GetMapping("/{categoryName}")
     public Optional<Category> getCategoryByNmae(@RequestParam String categoryName) {
         Optional<Category> result = categoryService.getCategoryByName(categoryName);
         if(result.isEmpty()) {
@@ -51,25 +51,25 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public String addCategory(@RequestBody String entity) {
-        //TODO: process POST request
-        
-        return entity;
+    public void addCategory(@RequestBody Category newCategory) {
+        categoryService.addCategory(newCategory);
     }
 
     @PutMapping("/{categoryID}")
-    public String updateCategory(@PathVariable String id, @RequestBody String entity) {
-        //TODO: process PUT request
-        
-        return entity;
+    public void updateCategory(@PathVariable("categoryID") Long categoryID, @RequestBody Category categoryChange) {
+        Optional<Category> result = categoryService.getCategoryById(categoryID);
+        if(result.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This category does not exist");
+        }
+        categoryService.updateCategory(categoryID, categoryChange);
     }
     
-    @DeleteMapping("/{categoryId}")
-    public void deleteCategoryById() {
+    @DeleteMapping("/{categoryID}")
+    public void deleteCategoryById(@PathVariable("categoryID") Long categoryID) {
+        Optional<Category> result = categoryService.getCategoryById(categoryID);
+        if(result.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This category does not exist");
+        }
+        categoryService.deleteById(categoryID);
     }
-
-    @DeleteMapping("/{categoryName}")
-    public void deleteCategoryByName() {
-    }
-    
 }

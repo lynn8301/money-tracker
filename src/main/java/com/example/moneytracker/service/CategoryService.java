@@ -24,6 +24,23 @@ public class CategoryService {
 
     public Optional<Category> getCategoryByName(String categoryName) {
         return categoryRepository.findByName(categoryName);
+    }
 
+    public void addCategory(Category newCategory) {
+        categoryRepository.save(newCategory);
+    }
+
+    public void updateCategory(Long categoryId, Category categoryChange) {
+        Category category = categoryRepository.findById(categoryId)
+        .orElseThrow(RuntimeException::new);
+
+        category.setName(categoryChange.getName());
+        category.setType(categoryChange.getType());
+
+        categoryRepository.save(category);
+    }
+
+    public void deleteById(Long categoryId) {
+        categoryRepository.deleteById(categoryId);
     }
 }
