@@ -33,9 +33,8 @@ public class CategoryService {
     public void updateCategory(Long categoryId, Category categoryChange) {
         Category category = categoryRepository.findById(categoryId)
         .orElseThrow(RuntimeException::new);
-
-        category.setName(categoryChange.getName());
-        category.setType(categoryChange.getType());
+        if(categoryChange.getName() != null) category.setName(categoryChange.getName());
+        if(categoryChange.getType() != null) category.setType(categoryChange.getType());
 
         categoryRepository.save(category);
     }

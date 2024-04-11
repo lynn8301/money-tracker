@@ -39,11 +39,12 @@ public class UserService {
         User user = userRepository.findById(userID)
         .orElseThrow(RuntimeException::new);      
 
-        user.setName(userChange.getName());
-        user.setEmail(userChange.getEmail());
-
-        String password2Sha256 = basicUtility.str2Sha256(userChange.getPassword());
-        if(password2Sha256 != user.getPassword()) user.setPassword(password2Sha256);        
+        if(userChange.getName() != null) user.setName(userChange.getName());
+        if(userChange.getEmail() != null) user.setEmail(userChange.getEmail());
+        if(userChange.getPassword() != null) {
+            String password2Sha256 = basicUtility.str2Sha256(userChange.getPassword());
+            if(password2Sha256 != user.getPassword()) user.setPassword(password2Sha256);
+        }
         
         userRepository.save(user);
     }
